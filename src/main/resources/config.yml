@@ -1,0 +1,25 @@
+#原始打卡记录文件
+recordUri: "record.txt"
+#日历文件
+calenderUri: "calender.txt"
+#加班信息文件
+workOvertimeInfoUri: ""
+#汇总导出excel文件名称
+totalExcelFileName: "考勤汇总.xlsx"
+
+#一天中考勤开始的时间
+offWordHourLimit: 6
+
+#免费迟到次数
+comelateFreeCount: 2
+#免费迟到最大时间
+comelateFreeMinute: 30
+#免费打卡次数
+noClockFreeCount: 1
+
+#早上最晚打卡时间
+comelateDeadline: "09:30"
+
+
+
+
