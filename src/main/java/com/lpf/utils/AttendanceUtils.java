@@ -20,7 +20,7 @@ public class AttendanceUtils {
         LocalTime localTime = LocalTime.of(9, 0);
         LocalTime offworkTime = LocalTime.of(18, 0);
 
-        if (localTime.isAfter(localTime)) {
+        if (startTime.isAfter(localTime)) {
             offworkTime = offworkTime.plusMinutes(30);
         }
         return offworkTime;
