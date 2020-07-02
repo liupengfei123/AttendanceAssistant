@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -88,7 +89,7 @@ public class ExecuteProcess {
             result.add(person);
         });
 
-        result.sort((Person p1, Person p2) -> p1.getEnNo().compareTo(p2.getEnNo()));
+        result.sort(Comparator.comparing(Person::getEnNo));
         return result;
     }
 
@@ -109,6 +110,7 @@ public class ExecuteProcess {
             Record endRecord = null;
 
             LocalDateTime onWorkTime = toDay.atTime(config.getOffWordHourLimit(), 0);
+            LocalDateTime dayMiddleTime = toDay.atTime(12, 0);
             LocalDateTime offWorkTime = onWorkTime.plusDays(1);
             for (; index < records.size(); index++){
                 Record temp = records.get(index);
@@ -129,6 +131,16 @@ public class ExecuteProcess {
             //周末没有加班就不加到考勤列表中
             if (dayType == DayType.WEEKEND && startRecord == null && endRecord == null){
                 continue;
+            }
+
+            //如果一天 只有一次打卡 开始打开和结束打开会指向同一条打卡记录
+            if (startRecord != null && endRecord == startRecord) {
+                //没超过12点就算是早上打卡
+                if (dayMiddleTime.isAfter(startRecord.getDataTime())){
+                    endRecord = null;
+                } else {
+                    startRecord = null;
+                }
             }
 
             AttendanceDay attendanceDay = new AttendanceDay(toDay, dayType);
