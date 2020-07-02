@@ -158,7 +158,6 @@ public class AttendanceVisitor implements AttendanceInfoVisitor {
                 sb = leaveEarlyInThirtyDetail;
                 break;
         }
-        LOGGER.debug(leaveEarly.toString());
         sb.append(leaveEarly.getDateTime().format(dateTimeFormatter)).append(" 早退 ").append(leaveEarly.getLeaveEarlyMinute()).append("分").append("\r\n");
     }
 

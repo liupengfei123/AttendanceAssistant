@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -44,6 +45,29 @@ public class AttendanceUtils {
 
         return result;
     }
+
+    /**
+     * 返回不大于 endTime 的从 startTime 开始的整小时的时间点
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    public static LocalDateTime getIntHourByStartTime(LocalDateTime startTime, LocalDateTime endTime) {
+        LocalDateTime temp = startTime;
+        LocalDateTime result = startTime;
+
+        while (true) {
+            temp = temp.plusHours(1);
+
+            if (!temp.isAfter(endTime)) {
+                result = temp;
+            } else {
+                break;
+            }
+        }
+        return result;
+    }
+
 
     /**
      * 从文件中导入工作日历，以修改节假日

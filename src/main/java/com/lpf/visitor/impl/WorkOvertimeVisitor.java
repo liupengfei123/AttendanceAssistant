@@ -3,6 +3,7 @@ package com.lpf.visitor.impl;
 import com.lpf.info.*;
 import com.lpf.pojo.AttendanceDay;
 import com.lpf.pojo.Person;
+import com.lpf.utils.AttendanceUtils;
 import com.lpf.visitor.AttendanceInfoVisitor;
 import lombok.Getter;
 
@@ -55,6 +56,8 @@ public class WorkOvertimeVisitor implements AttendanceInfoVisitor {
         LocalDateTime endTime = workOvertime.getEndTime();
 
         workOvertimeStart.add(startTime.format(dateTimeFormatter));
+
+        endTime = AttendanceUtils.getIntHourByStartTime(startTime, endTime);
         workOvertimeEnd.add(endTime.format(dateTimeFormatter));
     }
 
