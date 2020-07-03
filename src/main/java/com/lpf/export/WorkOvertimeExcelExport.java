@@ -13,13 +13,22 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class WorkOvertimeExcelExport {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkOvertimeExcelExport.class);
 
+    /**
+     *  需要和 WorkOvertimeVisitor 中的 dateTimeFormatter相同
+     *  @see com.lpf.visitor.impl.WorkOvertimeVisitor
+     */
+    private final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy/M/d HH:mm:ss");
+
     private Workbook wb;
     private CellStyle generalCellStyle;
+    private CellStyle dateCellStyle;
 
     private Person person;
 
@@ -40,6 +49,21 @@ public class WorkOvertimeExcelExport {
         generalCellStyle.setAlignment(HorizontalAlignment.CENTER);
         generalCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         this.generalCellStyle = generalCellStyle;
+
+
+        CellStyle dateCellStyle = wb.createCellStyle();
+        dateCellStyle.setBorderBottom(BorderStyle.THIN); //下边框
+        dateCellStyle.setBorderLeft(BorderStyle.THIN);//左边框
+        dateCellStyle.setBorderTop(BorderStyle.THIN);//上边框
+        dateCellStyle.setBorderRight(BorderStyle.THIN);//右边框
+        dateCellStyle.setWrapText(true);
+        dateCellStyle.setAlignment(HorizontalAlignment.CENTER);
+        dateCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        //yyyy/m/d h:mm
+        dateCellStyle.setDataFormat((short) 0x16);
+
+        this.dateCellStyle = dateCellStyle;
     }
 
     public void export() {
@@ -70,13 +94,12 @@ public class WorkOvertimeExcelExport {
 
         for (int i = 0; i < workOvertimeStart.size(); i++) {
             Row row = sheet.createRow(i + 2);
-            drawCell(row, workOvertimeStart.get(i), 0);
-            drawCell(row, workOvertimeEnd.get(i), 1);
+            drawCellDate(row, workOvertimeStart.get(i), 0);
+            drawCellDate(row, workOvertimeEnd.get(i), 1);
             drawCell(row, "", 2);
         }
-
-        sheet.autoSizeColumn(0);
-        sheet.autoSizeColumn(1);
+        sheet.setColumnWidth(0, 5000);
+        sheet.setColumnWidth(1, 5000);
     }
 
 
@@ -101,6 +124,18 @@ public class WorkOvertimeExcelExport {
         Cell cell = row.createCell(column);
         cell.setCellValue(value);
         cell.setCellStyle(generalCellStyle);
+        return cell;
+    }
+
+    private Cell drawCellDate(Row row, String value, int column){
+        Cell cell = row.createCell(column);
+        try {
+            cell.setCellValue(dateTimeFormatter.parse(value));
+        } catch (ParseException e) {
+            LOGGER.error("导出excel失败！", e);
+            e.printStackTrace();
+        }
+        cell.setCellStyle(dateCellStyle);
         return cell;
     }
 }

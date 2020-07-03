@@ -16,7 +16,7 @@ public class WorkOvertimeVisitor implements AttendanceInfoVisitor {
 
     private Person person;
 
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm:ss");
 
     @Getter  private List<String> workOvertimeStart = new ArrayList<>();
     @Getter  private List<String> workOvertimeEnd = new ArrayList<>();
